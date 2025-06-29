@@ -1,0 +1,139 @@
+/* Estilos generales */
+body {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+}
+
+/* Contenedor principal */
+#contenedor {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Cabecera */
+#cabecera {
+  height: 200px;
+  background-image: url("./assets/imagenes/logotipo-libreria-dibujado-mano_23-2149331221.avif");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+#cabecera h1 {
+  margin: 0;
+  line-height: 200px;
+  font-size: 2em;
+  color: white;
+}
+
+#cabecera #logo {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  left: 20px;
+  top: 25px;
+}
+
+/* Menú de navegación */
+#menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 20px 0;
+}
+
+#menu a {
+  text-decoration: none;
+  color: #333;
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+#menu a:hover {
+  color: #0077cc;
+}
+
+/* Secciones */
+.seccion {
+  margin: 40px auto;
+  padding: 10px;
+  width: 90%;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.seccion h2 {
+  color: #222;
+}
+
+/* Libros */
+.libros {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.libro {
+  width: 180px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.libro img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.libro h3 {
+  font-size: 1em;
+  margin: 0;
+}
+
+.libro h4 {
+  font-size: 0.9em;
+  color: #666;
+  margin: 5px 0 0 0;
+}
+
+/* Footer */
+#pie {
+  background-color: rgb(228, 227, 227);
+  padding: 20px;
+  margin-top: 50px;
+}
+
+#pie p {
+  margin: 5px 0;
+}
+
+#redes-sociales {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+#redes-sociales a {
+  text-decoration: none;
+  color: #0077cc;
+}
+
+#redes-sociales a:hover {
+  color: #005999;
+}
+
+/* Estilo de fondo personalizado */
+.lightblue {
+  background-color: rgb(201, 238, 250);
+}

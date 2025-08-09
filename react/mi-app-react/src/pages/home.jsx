@@ -5,28 +5,16 @@ import Footer from '../components/footer';
 import Seccion from '../components/seccion';
 
 const Home = () => {
-  const secciones = [
-    {
-      nombre: 'Ficción',
-      libros: [
-        { titulo: '1984', autor: 'George Orwell', imagen: '#' },
-        { titulo: 'El túnel', autor: 'Ernesto Sabato', imagen: '#' },
-      ],
-    },
-    {
-      nombre: 'Fantasía',
-      libros: [
-        { titulo: 'Harry Potter', autor: 'J.K. Rowling', imagen: '#' },
-        { titulo: 'El nombre del viento', autor: 'Patrick Rothfuss', imagen: '#' },
-      ],
-    },
-    {
-      nombre: 'Ciencia',
-      libros: [
-        { titulo: 'Breves respuestas a las grandes preguntas', autor: 'Stephen Hawking', imagen: '#' },
-      ],
-    },
-  ];
+  const [secciones, setSecciones] = useState([]);
+   
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('http://localhost:3000/api/books');
+      const data = await response.json();
+      setSecciones(data);
+    };
+    fetchData();
+  }, []);
 
   return (
     <div id="contenedor">

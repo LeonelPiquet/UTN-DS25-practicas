@@ -1,44 +1,16 @@
-import { Book, CreateBookRequest, UpdateBookRequest } from '../types/book.types';
-
-let books: Book[] = [
-  {
-    id: '1',
-    title: 'Don Quixote',
-    author: 'Cervantes',
-    price: 1500,
-    createdAt: new Date(),
-  },
-  {
-    id: '2',
-    title: '1984',
-    author: 'Orwell',
-    price: 1200,
-    createdAt: new Date(),
-  },
-  {
-    id: '3',
-    title: 'The Great Gatsby',
-    author: 'Fitzgerald',
-    price: 1800,
-    createdAt: new Date(),
-  },
-  {
-    id: '4',
-    title: 'To Kill a Mockingbird',
-    author: 'Harper Lee',
-    price: 1600,
-    createdAt: new Date(),
-  },
-];
-
-
+import prisma from '../config/prisma';
+import type { Book } from 'prisma';
+import { CreateBookRequest, UpdateBookRequest } from 
+'../types/book.types';
 export async function getAllBooks(): Promise<Book[]> {
+  const books = await prisma.book.findMany({
+    orderBy: { id: 'asc' },
+  });
+  // Prisma ya devuelve objetos con las mismas claves del modelo
   return books;
 }
-
-
-export async function getBookById(id: string): Promise<Book> {
-  const book = books.find(b => b.id === id);
+export async function getBookById(id: number): Promise<Book> {
+  const book = await prisma.book.findUnique({ where: { id } });
   if (!book) {
     const error = new Error('Book not found');
     (error as any).statusCode = 404;
@@ -46,38 +18,46 @@ export async function getBookById(id: string): Promise<Book> {
   }
   return book;
 }
-
-export async function createBook(bookData: CreateBookRequest): 
+export async function createBook(data: CreateBookRequest): 
 Promise<Book> {
- // Validación de reglas de negocio
- if (bookData.price <= 0) {
-   const error = new Error('Price must be greater than 0');
-   (error as any).statusCode = 400;
-   throw error;
- }
- const newBook: Book = {
-   id: (Math.max(...books.map(b => parseInt(b.id, 10))) + 1).toString(),
-   ...bookData,
-   createdAt: new Date(),
- };
- books.push(newBook);
- return newBook;
+  // Validaciones de negocio
+  if (data.price <= 0) {
+    const error = new Error('Price must be greater than 0');
+    (error as any).statusCode = 400;
+    throw error;
+  }
+  const created = await prisma.book.create({
+    data: {
+      title: data.title,
+      author: data.author,
+      price: data.price,
+    },
+  });
+  return created;
 }
-
-
-export async function updateBook(id: string, updateData: UpdateBookRequest): Promise<Book> {
- const bookIndex = books.findIndex(b => b.id === id);
- if (bookIndex === -1) {
-   const error = new Error('Book not found');
-   (error as any).statusCode = 404;
-   throw error;
- }
- // Validar precio si viene en el update
- if (updateData.price !== undefined && updateData.price <= 0) {
-   const error = new Error('Price must be greater than 0');
-   (error as any).statusCode = 400;
-   throw error;
- }
- books[bookIndex] = { ...books[bookIndex], ...updateData };
- return books[bookIndex];
-} 
+export async function updateBook(id: number, updateData: 
+UpdateBookRequest): Promise<Book> {
+  if (updateData.price !== undefined && updateData.price <= 0) {
+    const error = new Error('Price must be greater than 0');
+    (error as any).statusCode = 400;
+    throw error;
+  }
+  try {
+    const updated = await prisma.book.update({
+      where: { id },
+      data: {
+...(updateData.title !== undefined ? { title: updateData.title } : {}),
+...(updateData.author !== undefined ? { author: updateData.author } : {}),
+...(updateData.price !== undefined ? { price: updateData.price } : {}),
+      },
+    });
+    return updated;
+  } catch (e: any) {
+    // Prisma error P2025 = Record not found
+    if (e.code === 'P2025') {
+      const error = new Error('Book not found');
+      (error as any).statusCode = 404;
+      throw error;
+    }
+    throw e;
+  }
